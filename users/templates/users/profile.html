@@ -1,0 +1,48 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Mon Profil | MedRDV{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="page-header">
+      <h1>Mon profil</h1>
+      <p class="text-muted">Consultez et mettez à jour vos informations personnelles.</p>
+    </div>
+    <div class="split-layout">
+      <div class="card">
+        <h2>Informations du compte</h2>
+        <ul class="list-clean stack" style="margin-top: 1rem;">
+          <li><strong>Nom complet :</strong> {{ request.user.get_full_name|default:request.user.username }}</li>
+          <li><strong>Email :</strong> {{ request.user.email|default:"Non renseigné" }}</li>
+          <li><strong>Téléphone :</strong> {{ request.user.phone|default:"Non renseigné" }}</li>
+          <li><strong>Adresse :</strong> {{ request.user.address|default:"Non renseignée" }}</li>
+          <li><strong>Rôle :</strong>
+            {% if request.user.is_staff or request.user.is_superuser %}
+              Administrateur
+            {% elif request.user.is_doctor %}
+              Médecin
+            {% else %}
+              Patient
+            {% endif %}
+          </li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Modifier mes informations</h2>
+        <form method="post" style="margin-top: 1rem;">
+          {% csrf_token %}
+          {% for field in form %}
+            <div class="form-group">
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {{ field.errors }}
+            </div>
+          {% endfor %}
+          <button class="btn btn-primary" type="submit">Enregistrer</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

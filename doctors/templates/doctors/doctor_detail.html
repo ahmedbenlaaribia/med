@@ -1,0 +1,55 @@
+{% extends 'base/base.html' %}
+
+{% block title %}{{ medecin }} | MedRDV{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="detail-layout">
+      <div class="card">
+        <div class="appointment-item">
+          <div style="display: flex; gap: 1rem; align-items: center;">
+            {% if medecin.photo %}
+              <img class="doctor-photo" src="{{ medecin.photo.url }}" alt="{{ medecin }}">
+            {% else %}
+              <div class="doctor-photo doctor-photo-placeholder">
+                <i class="fa-solid fa-user-doctor"></i>
+              </div>
+            {% endif %}
+            <div>
+              <h1>{{ medecin }}</h1>
+              <p>{{ medecin.specialite.nom }}</p>
+              <p class="text-muted">{{ medecin.ville }}</p>
+            </div>
+          </div>
+          <div>
+            <span class="badge badge-confirme">Validé</span>
+          </div>
+        </div>
+        <div class="stack" style="margin-top: 1rem;">
+          <p><strong>Adresse :</strong> {{ medecin.adresse }}</p>
+          <p><strong>Tarif :</strong> {{ medecin.tarif }} MAD</p>
+          <p><strong>Description :</strong> {{ medecin.description|default:"Aucune description fournie." }}</p>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="card">
+          <h2>Disponibilités</h2>
+          <ul class="list-clean" style="margin-top: 1rem;">
+            {% for dispo in medecin.disponibilites.all %}
+              <li>{{ dispo.get_jour_display }} : {{ dispo.heure_debut|time:"H:i" }} - {{ dispo.heure_fin|time:"H:i" }}</li>
+            {% empty %}
+              <li>Aucune disponibilité renseignée.</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% if request.user.is_authenticated and request.user.is_patient %}
+          <a class="btn btn-primary" href="{% url 'book_appointment' medecin.pk %}">Prendre RDV</a>
+        {% elif not request.user.is_authenticated %}
+          <a class="btn btn-outline" href="{% url 'login' %}?next={% url 'book_appointment' medecin.pk %}">Connectez-vous pour réserver</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

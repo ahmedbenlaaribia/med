@@ -1,0 +1,22 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Annuler un RDV | MedRDV{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="card" style="max-width: 700px; margin: 0 auto;">
+      <h1>Confirmer l'annulation</h1>
+      <p style="margin: 1rem 0;">
+        Voulez-vous vraiment annuler votre rendez-vous avec <strong>{{ appointment.medecin }}</strong>
+        le <strong>{{ appointment.date|date:"d/m/Y" }}</strong> à <strong>{{ appointment.heure|time:"H:i" }}</strong> ?
+      </p>
+      <form method="post" class="action-row">
+        {% csrf_token %}
+        <button class="btn btn-danger" type="submit">Oui, annuler le rendez-vous</button>
+        <a class="btn btn-outline" href="{% url 'patient_appointments' %}">Retour</a>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

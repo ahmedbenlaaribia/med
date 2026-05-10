@@ -1,0 +1,54 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Mes RDV | MedRDV{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="page-header">
+      <h1>Mes rendez-vous</h1>
+      <p class="text-muted">Retrouvez ici vos rendez-vous à venir et votre historique.</p>
+    </div>
+
+    <div class="card" style="margin-bottom: 1.5rem;">
+      <h2>À venir</h2>
+      <div style="margin-top: 1rem;">
+        {% for rdv in upcoming_appointments %}
+          <div class="appointment-item">
+            <div>
+              <strong>{{ rdv.medecin }}</strong>
+              <p>{{ rdv.medecin.specialite.nom }} - {{ rdv.date|date:"d/m/Y" }} à {{ rdv.heure|time:"H:i" }}</p>
+              <p class="text-muted">{{ rdv.motif|default:"Consultation sans motif précisé." }}</p>
+            </div>
+            <div class="actions-cell">
+              <span class="badge badge-{{ rdv.statut }}">{{ rdv.get_statut_display }}</span>
+              {% if rdv.statut == 'en_attente' or rdv.statut == 'confirme' %}
+                <a class="btn btn-danger" href="{% url 'cancel_appointment' rdv.pk %}">Annuler</a>
+              {% endif %}
+            </div>
+          </div>
+        {% empty %}
+          <p>Aucun rendez-vous à venir.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Historique</h2>
+      <div style="margin-top: 1rem;">
+        {% for rdv in history_appointments %}
+          <div class="appointment-item">
+            <div>
+              <strong>{{ rdv.medecin }}</strong>
+              <p>{{ rdv.medecin.specialite.nom }} - {{ rdv.date|date:"d/m/Y" }} à {{ rdv.heure|time:"H:i" }}</p>
+            </div>
+            <span class="badge badge-{{ rdv.statut }}">{{ rdv.get_statut_display }}</span>
+          </div>
+        {% empty %}
+          <p>Aucun historique pour le moment.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

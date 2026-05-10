@@ -1,0 +1,110 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Dashboard Admin | MedRDV{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="page-header">
+      <h1>Dashboard administrateur</h1>
+      <p class="text-muted">Vue globale sur les utilisateurs, médecins et rendez-vous.</p>
+    </div>
+
+    <div class="dashboard-stats">
+      <div class="stat-card"><i class="fa-solid fa-users"></i><div><strong>{{ total_patients }}</strong><span>Patients</span></div></div>
+      <div class="stat-card"><i class="fa-solid fa-user-doctor"></i><div><strong>{{ total_doctors }}</strong><span>Médecins</span></div></div>
+      <div class="stat-card"><i class="fa-solid fa-calendar-check"></i><div><strong>{{ total_appointments }}</strong><span>Rendez-vous</span></div></div>
+    </div>
+
+    <div class="split-layout" style="margin-top: 1.5rem;">
+      <div class="card">
+        <h2>Rendez-vous par spécialité</h2>
+        <ul class="list-clean" style="margin-top: 1rem;">
+          {% for item in appointments_by_specialty %}
+            <li>{{ item.medecin__specialite__nom|default:"Non définie" }} : {{ item.total }}</li>
+          {% empty %}
+            <li>Aucune donnée disponible.</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Spécialités les plus demandées</h2>
+        <ul class="list-clean" style="margin-top: 1rem;">
+          {% for item in most_requested_specialties %}
+            <li>{{ item.medecin__specialite__nom|default:"Non définie" }} : {{ item.total }} demandes</li>
+          {% empty %}
+            <li>Aucune donnée disponible.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="card table-wrapper" style="margin-top: 1.5rem;">
+      <h2 style="margin-bottom: 1rem;">Utilisateurs</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Rôle</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users_list %}
+            <tr>
+              <td>{{ user.get_full_name|default:"-" }}</td>
+              <td>{{ user.username }}</td>
+              <td>{{ user.email|default:"-" }}</td>
+              <td>
+                {% if user.is_staff or user.is_superuser %}
+                  Administrateur
+                {% elif user.is_doctor %}
+                  Médecin
+                {% else %}
+                  Patient
+                {% endif %}
+              </td>
+              <td>
+                {% if user.is_active %}
+                  <span class="badge badge-confirme">Actif</span>
+                {% else %}
+                  <span class="badge badge-annule">Bloqué</span>
+                {% endif %}
+              </td>
+              <td class="actions-cell">
+                {% if user != request.user %}
+                  <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="user_id" value="{{ user.id }}">
+                    <input type="hidden" name="action" value="toggle_active">
+                    <button class="btn btn-outline" type="submit">
+                      {% if user.is_active %}Bloquer{% else %}Débloquer{% endif %}
+                    </button>
+                  </form>
+                  {% if not user.is_staff and not user.is_superuser %}
+                    <form method="post">
+                      {% csrf_token %}
+                      <input type="hidden" name="user_id" value="{{ user.id }}">
+                      <input type="hidden" name="action" value="delete">
+                      <button class="btn btn-danger" type="submit">Supprimer</button>
+                    </form>
+                  {% endif %}
+                {% else %}
+                  <span class="helper-text">Compte connecté</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="6">Aucun utilisateur trouvé.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

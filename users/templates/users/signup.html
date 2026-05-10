@@ -1,0 +1,58 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Inscription | MedRDV{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="page-header">
+      <h1>Créer un compte patient</h1>
+      <p class="text-muted">L'inscription publique est réservée aux patients.</p>
+    </div>
+    <div class="card" style="max-width: 720px; margin: 0 auto;">
+      <form method="post">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+        {% endif %}
+        <div class="form-group">
+          <label for="{{ form.first_name.id_for_label }}">Prénom</label>
+          {{ form.first_name }}
+          {{ form.first_name.errors }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.last_name.id_for_label }}">Nom</label>
+          {{ form.last_name }}
+          {{ form.last_name.errors }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.username.id_for_label }}">Nom d'utilisateur</label>
+          {{ form.username }}
+          {{ form.username.errors }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.email.id_for_label }}">Email</label>
+          {{ form.email }}
+          {{ form.email.errors }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.phone.id_for_label }}">Téléphone</label>
+          {{ form.phone }}
+          {{ form.phone.errors }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.password1.id_for_label }}">Mot de passe</label>
+          {{ form.password1 }}
+          {{ form.password1.errors }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.password2.id_for_label }}">Confirmation du mot de passe</label>
+          {{ form.password2 }}
+          {{ form.password2.errors }}
+        </div>
+        <button class="btn btn-primary" type="submit">Créer mon compte</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Mon Planning | MedRDV{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="page-header">
+      <h1>Planning du {{ medecin }}</h1>
+      <p class="text-muted">Vue d'ensemble de vos rendez-vous et de vos disponibilités.</p>
+    </div>
+
+    <div class="dashboard-stats">
+      <div class="stat-card"><i class="fa-solid fa-calendar-day"></i><div><strong>{{ weekly_summary.total }}</strong><span>RDV cette semaine</span></div></div>
+      <div class="stat-card"><i class="fa-solid fa-circle-check"></i><div><strong>{{ weekly_summary.confirmes }}</strong><span>Confirmés</span></div></div>
+      <div class="stat-card"><i class="fa-solid fa-hourglass-half"></i><div><strong>{{ weekly_summary.attente }}</strong><span>En attente</span></div></div>
+      <div class="stat-card"><i class="fa-solid fa-clipboard-check"></i><div><strong>{{ weekly_summary.termines }}</strong><span>Terminés</span></div></div>
+    </div>
+
+    <div class="action-row" style="margin: 1.5rem 0;">
+      <a class="btn btn-primary" href="{% url 'doctor_appointments' %}">Voir tous mes RDV</a>
+      <a class="btn btn-outline" href="{% url 'manage_dispos' %}">Gérer les disponibilités</a>
+      <a class="btn btn-outline" href="{% url 'block_date' %}">Bloquer une date</a>
+    </div>
+
+    <div class="split-layout">
+      <div class="card">
+        <h2>Rendez-vous du jour</h2>
+        <div style="margin-top: 1rem;">
+          {% for rdv in today_appointments %}
+            <div class="appointment-item">
+              <div>
+                <strong>{{ rdv.patient.get_full_name|default:rdv.patient.username }}</strong>
+                <p>{{ rdv.heure|time:"H:i" }} - {{ rdv.motif|default:"Consultation médicale" }}</p>
+              </div>
+              <span class="badge badge-{{ rdv.statut }}">{{ rdv.get_statut_display }}</span>
+            </div>
+          {% empty %}
+            <p>Aucun rendez-vous aujourd'hui.</p>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="stack">
+        <div class="card">
+          <h2>Mes disponibilités</h2>
+          <ul class="list-clean" style="margin-top: 1rem;">
+            {% for dispo in disponibilites %}
+              <li>{{ dispo.get_jour_display }} : {{ dispo.heure_debut|time:"H:i" }} - {{ dispo.heure_fin|time:"H:i" }}</li>
+            {% empty %}
+              <li>Aucune disponibilité définie.</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="card">
+          <h2>Dates bloquées</h2>
+          <ul class="list-clean" style="margin-top: 1rem;">
+            {% for item in dates_bloquees %}
+              <li>{{ item.date|date:"d/m/Y" }}{% if item.motif %} - {{ item.motif }}{% endif %}</li>
+            {% empty %}
+              <li>Aucune date bloquée.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Connexion | MedRDV{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="page-header">
+      <h1>Connexion</h1>
+      <p class="text-muted">Connectez-vous pour accéder à vos rendez-vous et à votre espace personnel.</p>
+    </div>
+    <div class="card" style="max-width: 520px; margin: 0 auto;">
+      <form method="post">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+        {% endif %}
+        <div class="form-group">
+          <label for="{{ form.username.id_for_label }}">Nom d'utilisateur</label>
+          {{ form.username }}
+          {{ form.username.errors }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.password.id_for_label }}">Mot de passe</label>
+          {{ form.password }}
+          {{ form.password.errors }}
+        </div>
+        <button class="btn btn-primary btn-block" type="submit">Se connecter</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

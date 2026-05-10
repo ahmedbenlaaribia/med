@@ -1,0 +1,57 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Accueil | MedRDV{% endblock %}
+
+{% block content %}
+<section class="hero hero-simple">
+  <div class="container">
+    <div class="hero-simple-content">
+      <p class="eyebrow">Plateforme médicale</p>
+      <h1>Bienvenue sur MedRDV</h1>
+      <p class="hero-text">Une plateforme claire et moderne pour gérer vos rendez-vous médicaux en toute simplicité.</p>
+      <div class="hero-cta">
+        {% if request.user.is_authenticated %}
+          <a class="btn btn-secondary" href="{{ dashboard_url|default:'/' }}">Accéder à mon espace</a>
+        {% else %}
+          <a class="btn btn-secondary" href="{% url 'signup' %}">Créer un compte</a>
+          <a class="btn btn-outline btn-light" href="{% url 'login' %}">Se connecter</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-heading section-heading-center">
+      <div>
+        <p class="eyebrow">Statistiques</p>
+        <h2>Quelques chiffres de la plateforme</h2>
+      </div>
+    </div>
+    <div class="dashboard-stats">
+      <div class="stat-card">
+        <i class="fa-solid fa-stethoscope"></i>
+        <div>
+          <strong>{{ stats.specialites }}</strong>
+          <span>Spécialités</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <i class="fa-solid fa-user-doctor"></i>
+        <div>
+          <strong>{{ stats.medecins }}</strong>
+          <span>Médecins</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <i class="fa-solid fa-calendar-check"></i>
+        <div>
+          <strong>{{ stats.rendez_vous }}</strong>
+          <span>Rendez-vous</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
