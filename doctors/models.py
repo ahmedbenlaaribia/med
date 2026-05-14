@@ -32,7 +32,8 @@ class Medecin(models.Model):
     is_validated = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"Dr. {self.user.get_full_name()}"
+        display_name = self.user.get_full_name() or self.user.username
+        return f"Dr. {display_name}"
 
 
 class Disponibilite(models.Model):

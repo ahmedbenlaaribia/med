@@ -3,108 +3,310 @@
 {% block title %}Dashboard Admin | MedRDV{% endblock %}
 
 {% block content %}
-<section class="section">
+<section class="admin-page">
   <div class="container">
-    <div class="page-header">
-      <h1>Dashboard administrateur</h1>
-      <p class="text-muted">Vue globale sur les utilisateurs, médecins et rendez-vous.</p>
-    </div>
+    <div class="admin-shell">
+      <aside class="admin-side-menu">
+        <div class="admin-menu-brand">
+          <span class="admin-menu-logo"><i class="fa-solid fa-shield-heart"></i></span>
+          <div>
+            <strong>MedRDV</strong>
+            <p>Admin Panel</p>
+          </div>
+        </div>
 
-    <div class="dashboard-stats">
-      <div class="stat-card"><i class="fa-solid fa-users"></i><div><strong>{{ total_patients }}</strong><span>Patients</span></div></div>
-      <div class="stat-card"><i class="fa-solid fa-user-doctor"></i><div><strong>{{ total_doctors }}</strong><span>Médecins</span></div></div>
-      <div class="stat-card"><i class="fa-solid fa-calendar-check"></i><div><strong>{{ total_appointments }}</strong><span>Rendez-vous</span></div></div>
-    </div>
+        <nav class="admin-menu-nav" aria-label="Admin navigation">
+          <a class="admin-menu-link is-active" href="#overview" data-section-link="overview">
+            <i class="fa-solid fa-table-columns"></i>
+            <span>Vue d'ensemble</span>
+          </a>
+          <a class="admin-menu-link" href="#activity" data-section-link="activity">
+            <i class="fa-solid fa-calendar-check"></i>
+            <span>Rendez-vous recents</span>
+          </a>
+          <a class="admin-menu-link" href="#insights" data-section-link="insights">
+            <i class="fa-solid fa-user-doctor"></i>
+            <span>Indicateurs metier</span>
+          </a>
+          <a class="admin-menu-link" href="#users" data-section-link="users">
+            <i class="fa-solid fa-users-gear"></i>
+            <span>Utilisateurs</span>
+          </a>
+        </nav>
 
-    <div class="split-layout" style="margin-top: 1.5rem;">
-      <div class="card">
-        <h2>Rendez-vous par spécialité</h2>
-        <ul class="list-clean" style="margin-top: 1rem;">
-          {% for item in appointments_by_specialty %}
-            <li>{{ item.medecin__specialite__nom|default:"Non définie" }} : {{ item.total }}</li>
-          {% empty %}
-            <li>Aucune donnée disponible.</li>
-          {% endfor %}
-        </ul>
-      </div>
-      <div class="card">
-        <h2>Spécialités les plus demandées</h2>
-        <ul class="list-clean" style="margin-top: 1rem;">
-          {% for item in most_requested_specialties %}
-            <li>{{ item.medecin__specialite__nom|default:"Non définie" }} : {{ item.total }} demandes</li>
-          {% empty %}
-            <li>Aucune donnée disponible.</li>
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
+        <div class="admin-menu-summary">
+          <div class="admin-menu-summary-item">
+            <span>RDV aujourd'hui</span>
+            <strong>{{ today_appointments }}</strong>
+          </div>
+          <div class="admin-menu-summary-item">
+            <span>Comptes actifs</span>
+            <strong>{{ active_users }}</strong>
+          </div>
+          <div class="admin-menu-summary-item">
+            <span>Medecins valides</span>
+            <strong>{{ validated_doctors }}</strong>
+          </div>
+        </div>
 
-    <div class="card table-wrapper" style="margin-top: 1.5rem;">
-      <h2 style="margin-bottom: 1rem;">Utilisateurs</h2>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Nom</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Rôle</th>
-            <th>Statut</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for user in users_list %}
-            <tr>
-              <td>{{ user.get_full_name|default:"-" }}</td>
-              <td>{{ user.username }}</td>
-              <td>{{ user.email|default:"-" }}</td>
-              <td>
-                {% if user.is_staff or user.is_superuser %}
-                  Administrateur
-                {% elif user.is_doctor %}
-                  Médecin
-                {% else %}
-                  Patient
-                {% endif %}
-              </td>
-              <td>
-                {% if user.is_active %}
-                  <span class="badge badge-confirme">Actif</span>
-                {% else %}
-                  <span class="badge badge-annule">Bloqué</span>
-                {% endif %}
-              </td>
-              <td class="actions-cell">
-                {% if user != request.user %}
-                  <form method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="user_id" value="{{ user.id }}">
-                    <input type="hidden" name="action" value="toggle_active">
-                    <button class="btn btn-outline" type="submit">
-                      {% if user.is_active %}Bloquer{% else %}Débloquer{% endif %}
-                    </button>
-                  </form>
-                  {% if not user.is_staff and not user.is_superuser %}
-                    <form method="post">
-                      {% csrf_token %}
-                      <input type="hidden" name="user_id" value="{{ user.id }}">
-                      <input type="hidden" name="action" value="delete">
-                      <button class="btn btn-danger" type="submit">Supprimer</button>
-                    </form>
-                  {% endif %}
-                {% else %}
-                  <span class="helper-text">Compte connecté</span>
-                {% endif %}
-              </td>
-            </tr>
-          {% empty %}
-            <tr>
-              <td colspan="6">Aucun utilisateur trouvé.</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+        <div class="admin-menu-footer">
+          <div class="admin-user-badge">
+            <span>{{ request.user.username|first|upper }}</span>
+          </div>
+          <div>
+            <strong>{{ request.user.get_full_name|default:request.user.username }}</strong>
+            <p>Administrateur</p>
+          </div>
+        </div>
+      </aside>
+
+      <main class="admin-content">
+        <section class="admin-section admin-hero-section" id="overview" data-section="overview">
+          <div class="admin-hero-card">
+            <div>
+              <p class="eyebrow">Administration</p>
+              <h1>Vue d'ensemble</h1>
+              <p class="text-muted">Suivez rapidement l'etat des comptes, des medecins et des rendez-vous depuis un seul espace.</p>
+            </div>
+            <div class="admin-hero-date">
+              <span>Aujourd'hui</span>
+              <strong>{{ today_appointments }} RDV</strong>
+            </div>
+          </div>
+
+          <div class="admin-stat-grid">
+            <article class="admin-stat-card">
+              <span class="admin-stat-icon"><i class="fa-solid fa-users"></i></span>
+              <div>
+                <strong>{{ total_patients }}</strong>
+                <p>Patients</p>
+              </div>
+            </article>
+            <article class="admin-stat-card">
+              <span class="admin-stat-icon"><i class="fa-solid fa-user-doctor"></i></span>
+              <div>
+                <strong>{{ total_doctors }}</strong>
+                <p>Medecins</p>
+              </div>
+            </article>
+            <article class="admin-stat-card">
+              <span class="admin-stat-icon"><i class="fa-solid fa-calendar-check"></i></span>
+              <div>
+                <strong>{{ total_appointments }}</strong>
+                <p>Rendez-vous</p>
+              </div>
+            </article>
+            <article class="admin-stat-card">
+              <span class="admin-stat-icon"><i class="fa-solid fa-chart-line"></i></span>
+              <div>
+                <strong>{{ appointments_average_per_doctor }}</strong>
+                <p>Moyenne RDV / medecin</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="admin-status-strip">
+            <div class="admin-status-chip waiting">
+              <span>En attente</span>
+              <strong>{{ appointments_by_status.en_attente }}</strong>
+            </div>
+            <div class="admin-status-chip confirmed">
+              <span>Confirmes</span>
+              <strong>{{ appointments_by_status.confirme }}</strong>
+            </div>
+            <div class="admin-status-chip done">
+              <span>Termines</span>
+              <strong>{{ appointments_by_status.termine }}</strong>
+            </div>
+            <div class="admin-status-chip canceled">
+              <span>Annules</span>
+              <strong>{{ appointments_by_status.annule }}</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="admin-section" id="activity" data-section="activity">
+          <div class="admin-section-head">
+            <div>
+              <p class="eyebrow">Activite recente</p>
+              <h2>Derniers rendez-vous crees</h2>
+            </div>
+          </div>
+
+          <div class="card table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Patient</th>
+                  <th>Medecin</th>
+                  <th>Specialite</th>
+                  <th>Date</th>
+                  <th>Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for rdv in recent_appointments %}
+                  <tr>
+                    <td>{{ rdv.patient.get_full_name|default:rdv.patient.username }}</td>
+                    <td>{{ rdv.medecin }}</td>
+                    <td>{{ rdv.medecin.specialite.nom|default:"-" }}</td>
+                    <td>{{ rdv.date|date:"d/m/Y" }} {{ rdv.heure|time:"H:i" }}</td>
+                    <td><span class="badge badge-{{ rdv.statut }}">{{ rdv.get_statut_display }}</span></td>
+                  </tr>
+                {% empty %}
+                  <tr>
+                    <td colspan="5">Aucun rendez-vous trouve.</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="admin-section" id="insights" data-section="insights">
+          <div class="admin-section-head">
+            <div>
+              <p class="eyebrow">Indicateurs metier</p>
+              <h2>Charge et specialites</h2>
+            </div>
+          </div>
+
+          <div class="admin-insights-grid">
+            <div class="card">
+              <h3>Charge par medecin</h3>
+              <ul class="list-clean admin-list" style="margin-top: 1rem;">
+                {% for item in doctor_load %}
+                  <li class="list-row">
+                    <span>Dr. {{ item.display_name }}</span>
+                    <strong>{{ item.total }} RDV</strong>
+                  </li>
+                {% empty %}
+                  <li>Aucune donnee disponible.</li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Rendez-vous par specialite</h3>
+              <ul class="list-clean admin-list" style="margin-top: 1rem;">
+                {% for item in appointments_by_specialty %}
+                  <li class="list-row">
+                    <span>{{ item.medecin__specialite__nom|default:"Non definie" }}</span>
+                    <strong>{{ item.total }}</strong>
+                  </li>
+                {% empty %}
+                  <li>Aucune donnee disponible.</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="admin-section" id="users" data-section="users">
+          <div class="admin-section-head">
+            <div>
+              <p class="eyebrow">Comptes</p>
+              <h2>Gestion des utilisateurs</h2>
+            </div>
+          </div>
+
+          <div class="card table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Statut</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for user in users_list %}
+                  <tr>
+                    <td>{{ user.get_full_name|default:"-" }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email|default:"-" }}</td>
+                    <td>
+                      {% if user.is_staff or user.is_superuser %}
+                        Administrateur
+                      {% elif user.is_doctor %}
+                        Medecin
+                      {% else %}
+                        Patient
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if user.is_active %}
+                        <span class="badge badge-confirme">Actif</span>
+                      {% else %}
+                        <span class="badge badge-annule">Bloque</span>
+                      {% endif %}
+                    </td>
+                    <td class="actions-cell">
+                      {% if user != request.user %}
+                        <form method="post">
+                          {% csrf_token %}
+                          <input type="hidden" name="user_id" value="{{ user.id }}">
+                          <input type="hidden" name="action" value="toggle_active">
+                          <button class="btn btn-outline" type="submit">
+                            {% if user.is_active %}Bloquer{% else %}Debloquer{% endif %}
+                          </button>
+                        </form>
+                        {% if not user.is_staff and not user.is_superuser %}
+                          <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ user.id }}">
+                            <input type="hidden" name="action" value="delete">
+                            <button class="btn btn-danger" type="submit">Supprimer</button>
+                          </form>
+                        {% endif %}
+                      {% else %}
+                        <span class="helper-text">Compte connecte</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                {% empty %}
+                  <tr>
+                    <td colspan="6">Aucun utilisateur trouve.</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
     </div>
   </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const sectionLinks = document.querySelectorAll("[data-section-link]");
+  const sections = document.querySelectorAll("[data-section]");
+
+  if (sectionLinks.length && sections.length && "IntersectionObserver" in window) {
+    const setActiveLink = function (id) {
+      sectionLinks.forEach(function (link) {
+        link.classList.toggle("is-active", link.dataset.sectionLink === id);
+      });
+    };
+
+    const observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          setActiveLink(entry.target.dataset.section);
+        }
+      });
+    }, {
+      rootMargin: "-30% 0px -55% 0px",
+      threshold: 0.1
+    });
+
+    sections.forEach(function (section) {
+      observer.observe(section);
+    });
+  }
+</script>
 {% endblock %}

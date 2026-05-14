@@ -41,21 +41,25 @@
               <td><span class="badge badge-{{ rdv.statut }}">{{ rdv.get_statut_display }}</span></td>
               <td>{{ rdv.motif|default:"-" }}</td>
               <td class="actions-cell">
-                <form method="post" action="{% url 'update_statut' rdv.pk %}">
-                  {% csrf_token %}
-                  <input type="hidden" name="statut" value="confirme">
-                  <button class="btn btn-secondary" type="submit">Confirmer</button>
-                </form>
-                <form method="post" action="{% url 'update_statut' rdv.pk %}">
-                  {% csrf_token %}
-                  <input type="hidden" name="statut" value="termine">
-                  <button class="btn btn-outline" type="submit">Terminer</button>
-                </form>
-                <form method="post" action="{% url 'update_statut' rdv.pk %}">
-                  {% csrf_token %}
-                  <input type="hidden" name="statut" value="annule">
-                  <button class="btn btn-danger" type="submit">Annuler</button>
-                </form>
+                {% if rdv.statut == 'en_attente' %}
+                  <form method="post" action="{% url 'update_statut' rdv.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="statut" value="confirme">
+                    <button class="btn btn-secondary" type="submit">Confirmer</button>
+                  </form>
+                  <form method="post" action="{% url 'update_statut' rdv.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="statut" value="termine">
+                    <button class="btn btn-outline" type="submit">Terminer</button>
+                  </form>
+                  <form method="post" action="{% url 'update_statut' rdv.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="statut" value="annule">
+                    <button class="btn btn-danger" type="submit">Annuler</button>
+                  </form>
+                {% else %}
+                  <span class="helper-text">Action deja effectuee</span>
+                {% endif %}
               </td>
             </tr>
           {% empty %}

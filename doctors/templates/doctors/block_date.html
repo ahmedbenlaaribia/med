@@ -28,7 +28,13 @@
         <h2>Dates déjà bloquées</h2>
         <ul class="list-clean" style="margin-top: 1rem;">
           {% for item in dates_bloquees %}
-            <li>{{ item.date|date:"d/m/Y" }}{% if item.motif %} - {{ item.motif }}{% endif %}</li>
+            <li class="list-row">
+              <span>{{ item.date|date:"d/m/Y" }}{% if item.motif %} - {{ item.motif }}{% endif %}</span>
+              <form method="post" action="{% url 'delete_blocked_date' item.pk %}">
+                {% csrf_token %}
+                <button class="btn btn-outline btn-sm" type="submit">Retirer</button>
+              </form>
+            </li>
           {% empty %}
             <li>Aucune date bloquée.</li>
           {% endfor %}

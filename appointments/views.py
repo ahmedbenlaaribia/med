@@ -4,7 +4,6 @@ from datetime import date, datetime, timedelta
 from django.contrib import messages
 from django.http import HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import DetailView, FormView, TemplateView
 
@@ -53,7 +52,19 @@ def get_available_slots(medecin, num_days=14):
     return slots
 
 
-class BookAppointmentView(PatientRequiredMixin, FormView):
+class DoctorBookingRestrictedMixin:
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and not request.user.is_patient:
+            if request.user.is_staff or request.user.is_superuser:
+                messages.info(request, "L'administration n'accede pas a la reservation des rendez-vous.")
+                return redirect("admin_dashboard")
+            if request.user.is_doctor:
+                messages.info(request, "Un medecin ne peut pas prendre de rendez-vous sur la plateforme.")
+                return redirect("doctor_dashboard")
+        return super().dispatch(request, *args, **kwargs)
+
+
+class BookAppointmentView(DoctorBookingRestrictedMixin, PatientRequiredMixin, FormView):
     template_name = "appointments/book.html"
     form_class = RendezVousForm
 
@@ -176,6 +187,9 @@ class UpdateAppointmentStatusView(DoctorRequiredMixin, View):
         new_status = request.POST.get("statut")
         if new_status not in self.allowed_statuses:
             messages.error(request, "Statut invalide.")
+            return redirect("doctor_appointments")
+        if appointment.statut != "en_attente":
+            messages.info(request, "Une action a deja ete appliquee a ce rendez-vous.")
             return redirect("doctor_appointments")
         appointment.statut = new_status
         appointment.save(update_fields=["statut"])

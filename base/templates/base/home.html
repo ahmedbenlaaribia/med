@@ -3,20 +3,61 @@
 {% block title %}Accueil | MedRDV{% endblock %}
 
 {% block content %}
-<section class="hero hero-simple">
+<section class="hero hero-simple home-hero">
   <div class="container">
     <div class="hero-simple-content">
-      <p class="eyebrow">Plateforme médicale</p>
+      <p class="eyebrow">Bienvenue</p>
       <h1>Bienvenue sur MedRDV</h1>
-      <p class="hero-text">Une plateforme claire et moderne pour gérer vos rendez-vous médicaux en toute simplicité.</p>
+      <p class="hero-text">Une plateforme simple pour trouver un medecin, reserver un rendez-vous et suivre vos demandes sans complication.</p>
       <div class="hero-cta">
         {% if request.user.is_authenticated %}
-          <a class="btn btn-secondary" href="{{ dashboard_url|default:'/' }}">Accéder à mon espace</a>
+          <a class="btn btn-secondary" href="{{ dashboard_url|default:'/' }}">Acceder a mon espace</a>
         {% else %}
-          <a class="btn btn-secondary" href="{% url 'signup' %}">Créer un compte</a>
+          <a class="btn btn-secondary" href="{% url 'signup' %}">Creer un compte</a>
           <a class="btn btn-outline btn-light" href="{% url 'login' %}">Se connecter</a>
         {% endif %}
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Comment ca marche</p>
+        <h2>Prendre un rendez-vous en 3 etapes</h2>
+      </div>
+    </div>
+    <div class="card-grid">
+      {% for step in steps %}
+        <article class="card feature-card">
+          <div class="feature-icon"><i class="fa-solid {{ step.icon }}"></i></div>
+          <span class="feature-index">Etape {{ forloop.counter }}</span>
+          <h3>{{ step.title }}</h3>
+          <p class="text-muted">{{ step.description }}</p>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Fonctionnalites</p>
+        <h2>Les points forts du site</h2>
+      </div>
+    </div>
+    <div class="card-grid">
+      {% for feature in features %}
+        <article class="card feature-card">
+          <div class="feature-icon feature-icon-alt"><i class="fa-solid {{ feature.icon }}"></i></div>
+          <h3>{{ feature.title }}</h3>
+          <p class="text-muted">{{ feature.description }}</p>
+        </article>
+      {% endfor %}
     </div>
   </div>
 </section>
@@ -34,14 +75,14 @@
         <i class="fa-solid fa-stethoscope"></i>
         <div>
           <strong>{{ stats.specialites }}</strong>
-          <span>Spécialités</span>
+          <span>Specialites</span>
         </div>
       </div>
       <div class="stat-card">
         <i class="fa-solid fa-user-doctor"></i>
         <div>
           <strong>{{ stats.medecins }}</strong>
-          <span>Médecins</span>
+          <span>Medecins</span>
         </div>
       </div>
       <div class="stat-card">

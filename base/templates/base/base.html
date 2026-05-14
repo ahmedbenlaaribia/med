@@ -7,6 +7,7 @@
   <title>{% block title %}MedRDV{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'base/css/main.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  {% block extra_head %}{% endblock %}
 </head>
 <body class="{% if request.user.is_authenticated %}auth-user{% else %}auth-guest{% endif %}">
   <nav class="navbar">
@@ -17,13 +18,16 @@
       </button>
       <ul class="nav-links">
         <li><a class="nav-pill nav-home" href="{% url 'home' %}">{% if request.user.is_authenticated %}Accueil{% else %}Accueil public{% endif %}</a></li>
-        <li><a class="nav-pill nav-doctors" href="{% url 'doctor_list' %}">Nos Médecins</a></li>
+        {% if not request.user.is_authenticated or request.user.is_patient %}
+          <li><a class="nav-pill nav-doctors" href="{% url 'doctor_list' %}">Nos Medecins</a></li>
+        {% endif %}
         {% if request.user.is_authenticated %}
-          <li><span class="nav-status nav-status-user"><i class="fa-solid fa-circle-check"></i> Connecté</span></li>
+          <li><span class="nav-status nav-status-user"><i class="fa-solid fa-circle-check"></i> Connecte</span></li>
           {% if request.user.is_staff or request.user.is_superuser %}
             <li><a class="nav-pill nav-dashboard" href="{% url 'admin_dashboard' %}">Dashboard Admin</a></li>
           {% elif request.user.is_doctor %}
             <li><a class="nav-pill nav-dashboard" href="{% url 'doctor_dashboard' %}">Mon Planning</a></li>
+            <li><a href="{% url 'manage_dispos' %}">Mes creneaux</a></li>
             <li><a href="{% url 'profile' %}">Mon Profil</a></li>
           {% elif request.user.is_patient %}
             <li><a class="nav-pill nav-dashboard" href="{% url 'patient_appointments' %}">Mes RDV</a></li>
@@ -32,7 +36,7 @@
           <li>
             <form method="post" action="{% url 'logout' %}" class="nav-logout-form">
               {% csrf_token %}
-              <button type="submit" class="nav-logout-button">Déconnexion</button>
+              <button type="submit" class="nav-logout-button">Deconnexion</button>
             </form>
           </li>
         {% else %}
@@ -59,11 +63,12 @@
 
   <footer class="footer">
     <div class="container">
-      <p>Plateforme de Gestion des Rendez-vous Médicaux.</p>
-      <p>MedRDV facilite la prise de rendez-vous entre patients et médecins.</p>
+      <p>Plateforme de gestion des rendez-vous medicaux.</p>
+      <p>MedRDV facilite la prise de rendez-vous entre patients et medecins.</p>
     </div>
   </footer>
 
   <script src="{% static 'base/js/main.js' %}"></script>
+  {% block extra_js %}{% endblock %}
 </body>
 </html>
