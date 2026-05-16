@@ -5,35 +5,66 @@
 {% block content %}
 <section class="hero hero-simple home-hero">
   <div class="container">
-    <div class="hero-simple-content">
-      <p class="eyebrow">Bienvenue</p>
-      <h1>Bienvenue sur MedRDV</h1>
-      <p class="hero-text">Une plateforme simple pour trouver un medecin, reserver un rendez-vous et suivre vos demandes sans complication.</p>
-      <div class="hero-cta">
-        {% if request.user.is_authenticated %}
-          <a class="btn btn-secondary" href="{{ dashboard_url|default:'/' }}">Acceder a mon espace</a>
-        {% else %}
-          <a class="btn btn-secondary" href="{% url 'signup' %}">Creer un compte</a>
-          <a class="btn btn-outline btn-light" href="{% url 'login' %}">Se connecter</a>
-        {% endif %}
+    <div class="hero-content">
+      <div class="hero-simple-content">
+        <p class="eyebrow">Soins coordonnés</p>
+        <h1>MedRDV</h1>
+        <p class="hero-text">Une expérience premium pour trouver un médecin, réserver un créneau et suivre chaque rendez-vous depuis un espace simple, rapide et rassurant.</p>
+        <div class="hero-cta">
+          {% if request.user.is_authenticated %}
+            <a class="btn btn-secondary" href="{{ dashboard_url|default:'/' }}"><i class="fa-solid fa-table-columns" aria-hidden="true"></i>Accéder à mon espace</a>
+          {% else %}
+            <a class="btn btn-secondary" href="{% url 'signup' %}"><i class="fa-solid fa-user-plus" aria-hidden="true"></i>Créer un compte</a>
+            <a class="btn btn-light" href="{% url 'login' %}"><i class="fa-solid fa-arrow-right-to-bracket" aria-hidden="true"></i>Se connecter</a>
+          {% endif %}
+        </div>
+        <div class="hero-trust" aria-label="Points forts">
+          <span class="trust-chip"><i class="fa-solid fa-shield-heart" aria-hidden="true"></i>Profils vérifiés</span>
+          <span class="trust-chip"><i class="fa-solid fa-clock" aria-hidden="true"></i>Créneaux lisibles</span>
+          <span class="trust-chip"><i class="fa-solid fa-mobile-screen" aria-hidden="true"></i>Responsive</span>
+        </div>
+      </div>
+      <div class="hero-panel" aria-label="Aperçu plateforme">
+        <div class="hero-panel-card">
+          <span class="hero-panel-icon"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i></span>
+          <strong>{{ stats.rendez_vous }}</strong>
+          <span>rendez-vous suivis sur la plateforme</span>
+        </div>
+        <div class="floating-appointment">
+          <div class="floating-appointment-row">
+            <div>
+              <strong>Consultation générale</strong>
+              <p class="text-muted">Aujourd'hui, 10:30</p>
+            </div>
+            <span class="badge badge-confirme">Confirmé</span>
+          </div>
+          <div class="floating-appointment-row">
+            <div>
+              <strong>Cardiologie</strong>
+              <p class="text-muted">Demande patient</p>
+            </div>
+            <span class="badge badge-en_attente">En attente</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="section">
+<section class="section surface-band">
   <div class="container">
     <div class="section-heading">
       <div>
-        <p class="eyebrow">Comment ca marche</p>
-        <h2>Prendre un rendez-vous en 3 etapes</h2>
+        <p class="eyebrow">Comment ça marche</p>
+        <h2>Prendre un rendez-vous en 3 étapes</h2>
       </div>
+      <a class="btn btn-outline" href="{% url 'doctor_list' %}"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>Parcourir les médecins</a>
     </div>
     <div class="card-grid">
       {% for step in steps %}
-        <article class="card feature-card">
+        <article class="card feature-card card-interactive">
           <div class="feature-icon"><i class="fa-solid {{ step.icon }}"></i></div>
-          <span class="feature-index">Etape {{ forloop.counter }}</span>
+          <span class="feature-index">Étape {{ forloop.counter }}</span>
           <h3>{{ step.title }}</h3>
           <p class="text-muted">{{ step.description }}</p>
         </article>
@@ -46,13 +77,13 @@
   <div class="container">
     <div class="section-heading">
       <div>
-        <p class="eyebrow">Fonctionnalites</p>
+        <p class="eyebrow">Fonctionnalités</p>
         <h2>Les points forts du site</h2>
       </div>
     </div>
     <div class="card-grid">
       {% for feature in features %}
-        <article class="card feature-card">
+        <article class="card feature-card card-interactive">
           <div class="feature-icon feature-icon-alt"><i class="fa-solid {{ feature.icon }}"></i></div>
           <h3>{{ feature.title }}</h3>
           <p class="text-muted">{{ feature.description }}</p>
@@ -75,14 +106,14 @@
         <i class="fa-solid fa-stethoscope"></i>
         <div>
           <strong>{{ stats.specialites }}</strong>
-          <span>Specialites</span>
+          <span>Spécialités</span>
         </div>
       </div>
       <div class="stat-card">
         <i class="fa-solid fa-user-doctor"></i>
         <div>
           <strong>{{ stats.medecins }}</strong>
-          <span>Medecins</span>
+          <span>Médecins</span>
         </div>
       </div>
       <div class="stat-card">

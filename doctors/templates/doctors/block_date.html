@@ -6,11 +6,15 @@
 <section class="section">
   <div class="container">
     <div class="page-header">
-      <h1>Bloquer une date</h1>
-      <p class="text-muted">Empêchez la réservation sur une journée spécifique.</p>
+      <div>
+        <p class="eyebrow">Indisponibilité</p>
+        <h1>Bloquer une date</h1>
+        <p class="text-muted">Empêchez la réservation sur une journée spécifique.</p>
+      </div>
     </div>
     <div class="split-layout">
       <div class="card">
+        <p class="eyebrow">Nouvelle exception</p>
         <h2>Nouvelle date bloquée</h2>
         <form method="post" style="margin-top: 1rem;">
           {% csrf_token %}
@@ -21,10 +25,11 @@
               {{ field.errors }}
             </div>
           {% endfor %}
-          <button class="btn btn-danger" type="submit">Bloquer la date</button>
+          <button class="btn btn-danger" type="submit"><i class="fa-solid fa-calendar-xmark" aria-hidden="true"></i>Bloquer la date</button>
         </form>
       </div>
       <div class="card">
+        <p class="eyebrow">Historique</p>
         <h2>Dates déjà bloquées</h2>
         <ul class="list-clean" style="margin-top: 1rem;">
           {% for item in dates_bloquees %}
@@ -32,7 +37,7 @@
               <span>{{ item.date|date:"d/m/Y" }}{% if item.motif %} - {{ item.motif }}{% endif %}</span>
               <form method="post" action="{% url 'delete_blocked_date' item.pk %}">
                 {% csrf_token %}
-                <button class="btn btn-outline btn-sm" type="submit">Retirer</button>
+                <button class="btn btn-outline btn-sm" type="submit"><i class="fa-solid fa-xmark" aria-hidden="true"></i>Retirer</button>
               </form>
             </li>
           {% empty %}

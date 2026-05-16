@@ -11,7 +11,7 @@
           <span class="admin-menu-logo"><i class="fa-solid fa-shield-heart"></i></span>
           <div>
             <strong>MedRDV</strong>
-            <p>Admin Panel</p>
+            <p>Admin panel</p>
           </div>
         </div>
 
@@ -22,11 +22,11 @@
           </a>
           <a class="admin-menu-link" href="#activity" data-section-link="activity">
             <i class="fa-solid fa-calendar-check"></i>
-            <span>Rendez-vous recents</span>
+            <span>Rendez-vous récents</span>
           </a>
           <a class="admin-menu-link" href="#insights" data-section-link="insights">
             <i class="fa-solid fa-user-doctor"></i>
-            <span>Indicateurs metier</span>
+            <span>Indicateurs métier</span>
           </a>
           <a class="admin-menu-link" href="#users" data-section-link="users">
             <i class="fa-solid fa-users-gear"></i>
@@ -44,7 +44,7 @@
             <strong>{{ active_users }}</strong>
           </div>
           <div class="admin-menu-summary-item">
-            <span>Medecins valides</span>
+            <span>Médecins validés</span>
             <strong>{{ validated_doctors }}</strong>
           </div>
         </div>
@@ -66,7 +66,7 @@
             <div>
               <p class="eyebrow">Administration</p>
               <h1>Vue d'ensemble</h1>
-              <p class="text-muted">Suivez rapidement l'etat des comptes, des medecins et des rendez-vous depuis un seul espace.</p>
+              <p class="text-muted">Suivez rapidement l'état des comptes, des médecins et des rendez-vous depuis un seul espace.</p>
             </div>
             <div class="admin-hero-date">
               <span>Aujourd'hui</span>
@@ -86,7 +86,7 @@
               <span class="admin-stat-icon"><i class="fa-solid fa-user-doctor"></i></span>
               <div>
                 <strong>{{ total_doctors }}</strong>
-                <p>Medecins</p>
+                <p>Médecins</p>
               </div>
             </article>
             <article class="admin-stat-card">
@@ -100,7 +100,7 @@
               <span class="admin-stat-icon"><i class="fa-solid fa-chart-line"></i></span>
               <div>
                 <strong>{{ appointments_average_per_doctor }}</strong>
-                <p>Moyenne RDV / medecin</p>
+                <p>Moyenne RDV / médecin</p>
               </div>
             </article>
           </div>
@@ -111,15 +111,15 @@
               <strong>{{ appointments_by_status.en_attente }}</strong>
             </div>
             <div class="admin-status-chip confirmed">
-              <span>Confirmes</span>
+              <span>Confirmés</span>
               <strong>{{ appointments_by_status.confirme }}</strong>
             </div>
             <div class="admin-status-chip done">
-              <span>Termines</span>
+              <span>Terminés</span>
               <strong>{{ appointments_by_status.termine }}</strong>
             </div>
             <div class="admin-status-chip canceled">
-              <span>Annules</span>
+              <span>Annulés</span>
               <strong>{{ appointments_by_status.annule }}</strong>
             </div>
           </div>
@@ -128,20 +128,31 @@
         <section class="admin-section" id="activity" data-section="activity">
           <div class="admin-section-head">
             <div>
-              <p class="eyebrow">Activite recente</p>
-              <h2>Derniers rendez-vous crees</h2>
+              <p class="eyebrow">Activité récente</p>
+              <h2>Derniers rendez-vous créés</h2>
             </div>
           </div>
 
-          <div class="card table-wrapper">
-            <table class="table">
+          <div class="card">
+            <div class="table-toolbar">
+              <div>
+                <p class="text-muted">Recherche et tri instantanés</p>
+              </div>
+              <label class="table-search">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                <span class="sr-only">Rechercher un rendez-vous</span>
+                <input class="form-control" type="search" placeholder="Rechercher un RDV" data-table-search="#admin-appointments-table">
+              </label>
+            </div>
+            <div class="table-wrapper">
+            <table class="table" id="admin-appointments-table" data-sortable>
               <thead>
                 <tr>
-                  <th>Patient</th>
-                  <th>Medecin</th>
-                  <th>Specialite</th>
-                  <th>Date</th>
-                  <th>Statut</th>
+                  <th data-sort>Patient</th>
+                  <th data-sort>Médecin</th>
+                  <th data-sort>Spécialité</th>
+                  <th data-sort>Date</th>
+                  <th data-sort>Statut</th>
                 </tr>
               </thead>
               <tbody>
@@ -155,25 +166,26 @@
                   </tr>
                 {% empty %}
                   <tr>
-                    <td colspan="5">Aucun rendez-vous trouve.</td>
+                    <td colspan="5">Aucun rendez-vous trouvé.</td>
                   </tr>
                 {% endfor %}
               </tbody>
             </table>
+            </div>
           </div>
         </section>
 
         <section class="admin-section" id="insights" data-section="insights">
           <div class="admin-section-head">
             <div>
-              <p class="eyebrow">Indicateurs metier</p>
-              <h2>Charge et specialites</h2>
+              <p class="eyebrow">Indicateurs métier</p>
+              <h2>Charge et spécialités</h2>
             </div>
           </div>
 
           <div class="admin-insights-grid">
             <div class="card">
-              <h3>Charge par medecin</h3>
+              <h3>Charge par médecin</h3>
               <ul class="list-clean admin-list" style="margin-top: 1rem;">
                 {% for item in doctor_load %}
                   <li class="list-row">
@@ -181,20 +193,20 @@
                     <strong>{{ item.total }} RDV</strong>
                   </li>
                 {% empty %}
-                  <li>Aucune donnee disponible.</li>
+                  <li>Aucune donnée disponible.</li>
                 {% endfor %}
               </ul>
             </div>
             <div class="card">
-              <h3>Rendez-vous par specialite</h3>
+              <h3>Rendez-vous par spécialité</h3>
               <ul class="list-clean admin-list" style="margin-top: 1rem;">
                 {% for item in appointments_by_specialty %}
                   <li class="list-row">
-                    <span>{{ item.medecin__specialite__nom|default:"Non definie" }}</span>
+                    <span>{{ item.medecin__specialite__nom|default:"Non définie" }}</span>
                     <strong>{{ item.total }}</strong>
                   </li>
                 {% empty %}
-                  <li>Aucune donnee disponible.</li>
+                  <li>Aucune donnée disponible.</li>
                 {% endfor %}
               </ul>
             </div>
@@ -209,15 +221,26 @@
             </div>
           </div>
 
-          <div class="card table-wrapper">
-            <table class="table">
+          <div class="card">
+            <div class="table-toolbar">
+              <div>
+                <p class="text-muted">Rechercher, trier, bloquer ou supprimer un compte.</p>
+              </div>
+              <label class="table-search">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                <span class="sr-only">Rechercher un utilisateur</span>
+                <input class="form-control" type="search" placeholder="Rechercher un utilisateur" data-table-search="#admin-users-table">
+              </label>
+            </div>
+            <div class="table-wrapper">
+            <table class="table" id="admin-users-table" data-sortable>
               <thead>
                 <tr>
-                  <th>Nom</th>
-                  <th>Username</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                  <th>Statut</th>
+                  <th data-sort>Nom</th>
+                  <th data-sort>Username</th>
+                  <th data-sort>Email</th>
+                  <th data-sort>Rôle</th>
+                  <th data-sort>Statut</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -231,7 +254,7 @@
                       {% if user.is_staff or user.is_superuser %}
                         Administrateur
                       {% elif user.is_doctor %}
-                        Medecin
+                        Médecin
                       {% else %}
                         Patient
                       {% endif %}
@@ -240,7 +263,7 @@
                       {% if user.is_active %}
                         <span class="badge badge-confirme">Actif</span>
                       {% else %}
-                        <span class="badge badge-annule">Bloque</span>
+                        <span class="badge badge-annule">Bloqué</span>
                       {% endif %}
                     </td>
                     <td class="actions-cell">
@@ -250,7 +273,7 @@
                           <input type="hidden" name="user_id" value="{{ user.id }}">
                           <input type="hidden" name="action" value="toggle_active">
                           <button class="btn btn-outline" type="submit">
-                            {% if user.is_active %}Bloquer{% else %}Debloquer{% endif %}
+                            <i class="fa-solid fa-user-lock" aria-hidden="true"></i>{% if user.is_active %}Bloquer{% else %}Débloquer{% endif %}
                           </button>
                         </form>
                         {% if not user.is_staff and not user.is_superuser %}
@@ -258,21 +281,22 @@
                             {% csrf_token %}
                             <input type="hidden" name="user_id" value="{{ user.id }}">
                             <input type="hidden" name="action" value="delete">
-                            <button class="btn btn-danger" type="submit">Supprimer</button>
+                            <button class="btn btn-danger" type="submit"><i class="fa-solid fa-trash" aria-hidden="true"></i>Supprimer</button>
                           </form>
                         {% endif %}
                       {% else %}
-                        <span class="helper-text">Compte connecte</span>
+                        <span class="helper-text">Compte connecté</span>
                       {% endif %}
                     </td>
                   </tr>
                 {% empty %}
                   <tr>
-                    <td colspan="6">Aucun utilisateur trouve.</td>
+                    <td colspan="6">Aucun utilisateur trouvé.</td>
                   </tr>
                 {% endfor %}
               </tbody>
             </table>
+            </div>
           </div>
         </section>
       </main>

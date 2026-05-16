@@ -6,48 +6,60 @@
 <section class="section">
   <div class="container">
     <div class="page-header">
-      <h1>Nos médecins</h1>
-      <p class="text-muted">Filtrez la liste par spécialité, ville ou nom.</p>
+      <div>
+        <p class="eyebrow">Annuaire médical</p>
+        <h1>Nos médecins</h1>
+        <p class="text-muted">Filtrez par spécialité, ville ou nom et trouvez rapidement le praticien adapté.</p>
+      </div>
+      <span class="badge badge-confirme"><i class="fa-solid fa-shield-heart" aria-hidden="true"></i> Médecins validés</span>
     </div>
     <div class="card" style="margin-bottom: 1.5rem;">
       <form method="get" class="filter-bar">
         <div class="form-group" style="flex: 1 1 220px;">
           <label for="specialite">Spécialité</label>
-          <input id="specialite" class="form-control" type="text" name="specialite" value="{{ filter_values.specialite }}">
+          <input id="specialite" class="form-control" type="text" name="specialite" value="{{ filter_values.specialite }}" placeholder="Cardiologie, pédiatrie...">
         </div>
         <div class="form-group" style="flex: 1 1 220px;">
           <label for="ville">Ville</label>
-          <input id="ville" class="form-control" type="text" name="ville" value="{{ filter_values.ville }}">
+          <input id="ville" class="form-control" type="text" name="ville" value="{{ filter_values.ville }}" placeholder="Casablanca, Rabat...">
         </div>
         <div class="form-group" style="flex: 1 1 220px;">
           <label for="nom">Nom du médecin</label>
-          <input id="nom" class="form-control" type="text" name="nom" value="{{ filter_values.nom }}">
+          <input id="nom" class="form-control" type="text" name="nom" value="{{ filter_values.nom }}" placeholder="Nom ou prénom">
         </div>
         <div class="form-group" style="align-self: end;">
-          <button class="btn btn-primary" type="submit">Filtrer</button>
+          <button class="btn btn-primary" type="submit"><i class="fa-solid fa-sliders" aria-hidden="true"></i>Filtrer</button>
         </div>
       </form>
     </div>
 
-    <div class="card-grid">
+    <div class="doctor-grid">
       {% for medecin in medecins %}
-        <article class="card doctor-card">
-          {% if medecin.photo %}
-            <img class="doctor-photo" src="{{ medecin.photo.url }}" alt="{{ medecin }}">
-          {% else %}
-            <div class="doctor-photo doctor-photo-placeholder">
-              <i class="fa-solid fa-user-doctor"></i>
+        <article class="card doctor-card card-interactive">
+          <div class="doctor-card-header">
+            {% if medecin.photo %}
+              <img class="doctor-photo" src="{{ medecin.photo.url }}" alt="{{ medecin }}">
+            {% else %}
+              <div class="doctor-photo doctor-photo-placeholder">
+                <i class="fa-solid fa-user-doctor"></i>
+              </div>
+            {% endif %}
+            <div>
+              <h3>{{ medecin }}</h3>
+              <p class="text-muted">{{ medecin.specialite.nom }}</p>
             </div>
-          {% endif %}
-          <h3>{{ medecin }}</h3>
-          <p>{{ medecin.specialite.nom }}</p>
-          <p class="text-muted">{{ medecin.ville }}</p>
-          <p>{{ medecin.adresse|truncatechars:70 }}</p>
+          </div>
+          <div class="doctor-meta">
+            <span class="meta-chip"><i class="fa-solid fa-location-dot" aria-hidden="true"></i>{{ medecin.ville }}</span>
+            <span class="meta-chip"><i class="fa-solid fa-certificate" aria-hidden="true"></i>Validé</span>
+          </div>
+          <p class="text-muted">{{ medecin.adresse|truncatechars:88 }}</p>
           <p class="doctor-price">{{ medecin.tarif }} MAD</p>
-          <a class="btn btn-primary" href="{% url 'doctor_detail' medecin.pk %}">Voir le profil</a>
+          <a class="btn btn-primary" href="{% url 'doctor_detail' medecin.pk %}"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i>Voir le profil</a>
         </article>
       {% empty %}
         <div class="card empty-state">
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
           <p>Aucun médecin ne correspond à vos critères.</p>
         </div>
       {% endfor %}

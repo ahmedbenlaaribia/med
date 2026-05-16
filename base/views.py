@@ -18,30 +18,30 @@ class HomeView(TemplateView):
         context["steps"] = [
             {
                 "icon": "fa-user-plus",
-                "title": "Creer un compte",
-                "description": "Inscrivez-vous en tant que patient puis connectez-vous a votre espace personnel.",
+                "title": "Créer un compte",
+                "description": "Inscrivez-vous en tant que patient puis connectez-vous à votre espace personnel.",
             },
             {
                 "icon": "fa-user-doctor",
-                "title": "Choisir un medecin",
-                "description": "Parcourez les profils verifies, comparez les specialites et consultez les disponibilites.",
+                "title": "Choisir un médecin",
+                "description": "Parcourez les profils vérifiés, comparez les spécialités et consultez les disponibilités.",
             },
             {
                 "icon": "fa-calendar-check",
-                "title": "Reserver un creneau",
-                "description": "Selectionnez un horaire libre et confirmez votre demande de rendez-vous en quelques secondes.",
+                "title": "Réserver un créneau",
+                "description": "Sélectionnez un horaire libre et confirmez votre demande de rendez-vous en quelques secondes.",
             },
         ]
         context["features"] = [
             {
                 "icon": "fa-filter",
                 "title": "Recherche simple",
-                "description": "Filtrez par ville, specialite ou nom pour trouver rapidement le bon praticien.",
+                "description": "Filtrez par ville, spécialité ou nom pour trouver rapidement le bon praticien.",
             },
             {
                 "icon": "fa-clock",
-                "title": "Disponibilites claires",
-                "description": "Visualisez les creneaux libres et les dates bloquees sans appel telephonique.",
+                "title": "Disponibilités claires",
+                "description": "Visualisez les créneaux libres et les dates bloquées sans appel téléphonique.",
             },
             {
                 "icon": "fa-clipboard-list",

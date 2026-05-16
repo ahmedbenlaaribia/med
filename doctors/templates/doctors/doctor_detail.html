@@ -5,48 +5,64 @@
 {% block content %}
 <section class="section">
   <div class="container">
+    <div class="page-header">
+      <div>
+        <p class="eyebrow">Profil médecin</p>
+        <h1>{{ medecin }}</h1>
+        <p class="text-muted">{{ medecin.specialite.nom }} à {{ medecin.ville }}</p>
+      </div>
+      <a class="btn btn-outline" href="{% url 'doctor_list' %}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Retour aux médecins</a>
+    </div>
     <div class="detail-layout">
-      <div class="card">
-        <div class="appointment-item">
-          <div style="display: flex; gap: 1rem; align-items: center;">
+      <div class="card doctor-detail-hero">
+        <div class="profile-card-header">
             {% if medecin.photo %}
-              <img class="doctor-photo" src="{{ medecin.photo.url }}" alt="{{ medecin }}">
+              <img class="doctor-photo doctor-photo-lg" src="{{ medecin.photo.url }}" alt="{{ medecin }}">
             {% else %}
-              <div class="doctor-photo doctor-photo-placeholder">
+              <div class="doctor-photo doctor-photo-lg doctor-photo-placeholder">
                 <i class="fa-solid fa-user-doctor"></i>
               </div>
             {% endif %}
             <div>
-              <h1>{{ medecin }}</h1>
-              <p>{{ medecin.specialite.nom }}</p>
-              <p class="text-muted">{{ medecin.ville }}</p>
+              <span class="badge badge-confirme"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Profil validé</span>
+              <h2 style="margin-top: 0.65rem;">{{ medecin.specialite.nom }}</h2>
+              <p class="text-muted">{{ medecin.description|default:"Aucune description fournie." }}</p>
             </div>
-          </div>
-          <div>
-            <span class="badge badge-confirme">Validé</span>
-          </div>
         </div>
-        <div class="stack" style="margin-top: 1rem;">
-          <p><strong>Adresse :</strong> {{ medecin.adresse }}</p>
-          <p><strong>Tarif :</strong> {{ medecin.tarif }} MAD</p>
-          <p><strong>Description :</strong> {{ medecin.description|default:"Aucune description fournie." }}</p>
+        <div class="profile-facts">
+          <div class="profile-fact">
+            <span class="doctor-mini-icon"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></span>
+            <div><strong>Adresse</strong><p class="text-muted">{{ medecin.adresse }}</p></div>
+          </div>
+          <div class="profile-fact">
+            <span class="doctor-mini-icon teal"><i class="fa-solid fa-money-bill-wave" aria-hidden="true"></i></span>
+            <div><strong>Tarif</strong><p class="doctor-price">{{ medecin.tarif }} MAD</p></div>
+          </div>
         </div>
       </div>
       <div class="stack">
         <div class="card">
-          <h2>Disponibilités</h2>
+          <div class="section-heading" style="margin-bottom: 1rem;">
+            <div>
+              <p class="eyebrow">Planning</p>
+              <h2>Disponibilités</h2>
+            </div>
+          </div>
           <ul class="list-clean" style="margin-top: 1rem;">
             {% for dispo in medecin.disponibilites.all %}
-              <li>{{ dispo.get_jour_display }} : {{ dispo.heure_debut|time:"H:i" }} - {{ dispo.heure_fin|time:"H:i" }}</li>
+              <li class="list-row">
+                <span>{{ dispo.get_jour_display }}</span>
+                <strong>{{ dispo.heure_debut|time:"H:i" }} - {{ dispo.heure_fin|time:"H:i" }}</strong>
+              </li>
             {% empty %}
               <li>Aucune disponibilité renseignée.</li>
             {% endfor %}
           </ul>
         </div>
         {% if request.user.is_authenticated and request.user.is_patient %}
-          <a class="btn btn-primary" href="{% url 'book_appointment' medecin.pk %}">Prendre RDV</a>
+          <a class="btn btn-primary" href="{% url 'book_appointment' medecin.pk %}"><i class="fa-solid fa-calendar-plus" aria-hidden="true"></i>Prendre RDV</a>
         {% elif not request.user.is_authenticated %}
-          <a class="btn btn-outline" href="{% url 'login' %}?next={% url 'book_appointment' medecin.pk %}">Connectez-vous pour réserver</a>
+          <a class="btn btn-outline" href="{% url 'login' %}?next={% url 'book_appointment' medecin.pk %}"><i class="fa-solid fa-lock" aria-hidden="true"></i>Connectez-vous pour réserver</a>
         {% endif %}
       </div>
     </div>

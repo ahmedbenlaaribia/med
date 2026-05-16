@@ -6,29 +6,37 @@
 <section class="section">
   <div class="container">
     <div class="page-header">
-      <h1>Mon profil</h1>
-      <p class="text-muted">Consultez et mettez à jour vos informations personnelles.</p>
+      <div>
+        <p class="eyebrow">Compte</p>
+        <h1>Mon profil</h1>
+        <p class="text-muted">Consultez et mettez à jour vos informations personnelles.</p>
+      </div>
     </div>
     <div class="split-layout">
       <div class="card">
-        <h2>Informations du compte</h2>
-        <ul class="list-clean stack" style="margin-top: 1rem;">
-          <li><strong>Nom complet :</strong> {{ request.user.get_full_name|default:request.user.username }}</li>
-          <li><strong>Email :</strong> {{ request.user.email|default:"Non renseigné" }}</li>
-          <li><strong>Téléphone :</strong> {{ request.user.phone|default:"Non renseigné" }}</li>
-          <li><strong>Adresse :</strong> {{ request.user.address|default:"Non renseignée" }}</li>
-          <li><strong>Rôle :</strong>
-            {% if request.user.is_staff or request.user.is_superuser %}
-              Administrateur
-            {% elif request.user.is_doctor %}
-              Médecin
-            {% else %}
-              Patient
-            {% endif %}
-          </li>
+        <div class="profile-card-header">
+          <span class="auth-mark" style="margin-bottom: 0;">{{ request.user.username|first|upper }}</span>
+          <div>
+            <h2>{{ request.user.get_full_name|default:request.user.username }}</h2>
+            <p class="text-muted">
+              {% if request.user.is_staff or request.user.is_superuser %}
+                Administrateur
+              {% elif request.user.is_doctor %}
+                Médecin
+              {% else %}
+                Patient
+              {% endif %}
+            </p>
+          </div>
+        </div>
+        <ul class="list-clean" style="margin-top: 1rem;">
+          <li class="list-row"><span>Email</span><strong>{{ request.user.email|default:"Non renseigné" }}</strong></li>
+          <li class="list-row"><span>Téléphone</span><strong>{{ request.user.phone|default:"Non renseigné" }}</strong></li>
+          <li class="list-row"><span>Adresse</span><strong>{{ request.user.address|default:"Non renseignée" }}</strong></li>
         </ul>
       </div>
       <div class="card">
+        <p class="eyebrow">Mise à jour</p>
         <h2>Modifier mes informations</h2>
         <form method="post" style="margin-top: 1rem;">
           {% csrf_token %}
@@ -39,7 +47,7 @@
               {{ field.errors }}
             </div>
           {% endfor %}
-          <button class="btn btn-primary" type="submit">Enregistrer</button>
+          <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>Enregistrer</button>
         </form>
       </div>
     </div>

@@ -1,25 +1,30 @@
 {% extends 'base/base.html' %}
 
-{% block title %}Mes Creneaux | MedRDV{% endblock %}
+{% block title %}Mes Créneaux | MedRDV{% endblock %}
 
 {% block content %}
 <section class="section">
   <div class="container">
     <div class="page-header">
-      <h1>Gerer mes creneaux</h1>
-      <p class="text-muted">Ajoutez, modifiez et supprimez vos plages hebdomadaires ainsi que vos dates indisponibles.</p>
+      <div>
+        <p class="eyebrow">Planning</p>
+        <h1>Gérer mes créneaux</h1>
+        <p class="text-muted">Ajoutez, modifiez et supprimez vos plages hebdomadaires ainsi que vos dates indisponibles.</p>
+      </div>
+      <a class="btn btn-outline" href="{% url 'doctor_dashboard' %}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Dashboard</a>
     </div>
 
     <div class="dashboard-stats">
-      <div class="stat-card"><i class="fa-solid fa-calendar-week"></i><div><strong>{{ schedule_stats.weekly_slots }}</strong><span>Creneaux hebdomadaires</span></div></div>
-      <div class="stat-card"><i class="fa-solid fa-calendar-xmark"></i><div><strong>{{ schedule_stats.blocked_dates }}</strong><span>Dates bloquees</span></div></div>
-      <div class="stat-card"><i class="fa-solid fa-stethoscope"></i><div><strong>{{ schedule_stats.upcoming_appointments }}</strong><span>RDV a venir</span></div></div>
+      <div class="stat-card"><i class="fa-solid fa-calendar-week"></i><div><strong>{{ schedule_stats.weekly_slots }}</strong><span>Créneaux hebdomadaires</span></div></div>
+      <div class="stat-card"><i class="fa-solid fa-calendar-xmark"></i><div><strong>{{ schedule_stats.blocked_dates }}</strong><span>Dates bloquées</span></div></div>
+      <div class="stat-card"><i class="fa-solid fa-stethoscope"></i><div><strong>{{ schedule_stats.upcoming_appointments }}</strong><span>RDV à venir</span></div></div>
     </div>
 
     <div class="card-grid" style="margin-top: 1.5rem;">
       <div class="card">
-        <h2>Ajouter un creneau hebdomadaire</h2>
-        <p class="text-muted">Definissez vos heures de consultation recurentes.</p>
+        <p class="eyebrow">Disponibilité</p>
+        <h2>Ajouter un créneau hebdomadaire</h2>
+        <p class="text-muted">Définissez vos heures de consultation récurrentes.</p>
         <form method="post" action="{% url 'create_dispo' %}" style="margin-top: 1rem;">
           {% csrf_token %}
           {% for field in dispo_form %}
@@ -29,12 +34,13 @@
               {{ field.errors }}
             </div>
           {% endfor %}
-          <button class="btn btn-primary" type="submit">Ajouter le creneau</button>
+          <button class="btn btn-primary" type="submit"><i class="fa-solid fa-plus" aria-hidden="true"></i>Ajouter le créneau</button>
         </form>
       </div>
       <div class="card">
-        <h2>Bloquer une date precise</h2>
-        <p class="text-muted">Retirez une journee complete en cas d'absence ou d'indisponibilite.</p>
+        <p class="eyebrow">Exception</p>
+        <h2>Bloquer une date précise</h2>
+        <p class="text-muted">Retirez une journée complète en cas d'absence ou d'indisponibilité.</p>
         <form method="post" action="{% url 'create_blocked_date' %}" style="margin-top: 1rem;">
           {% csrf_token %}
           {% for field in blocked_date_form %}
@@ -44,7 +50,7 @@
               {{ field.errors }}
             </div>
           {% endfor %}
-          <button class="btn btn-outline" type="submit">Bloquer la date</button>
+          <button class="btn btn-outline" type="submit"><i class="fa-solid fa-calendar-xmark" aria-hidden="true"></i>Bloquer la date</button>
         </form>
       </div>
     </div>
@@ -54,7 +60,7 @@
         <div class="section-heading">
           <div>
             <p class="eyebrow">Planning hebdomadaire</p>
-            <h2>Mes disponibilites</h2>
+            <h2>Mes disponibilités</h2>
           </div>
         </div>
         <ul class="list-clean">
@@ -65,15 +71,15 @@
                 <p class="text-muted">{{ dispo.heure_debut|time:"H:i" }} - {{ dispo.heure_fin|time:"H:i" }}</p>
               </div>
               <div class="schedule-actions">
-                <a class="btn btn-outline btn-sm" href="{% url 'manage_dispos' %}?edit_dispo={{ dispo.pk }}">Modifier</a>
+                <a class="btn btn-outline btn-sm" href="{% url 'manage_dispos' %}?edit_dispo={{ dispo.pk }}"><i class="fa-solid fa-pen" aria-hidden="true"></i>Modifier</a>
                 <form method="post" action="{% url 'delete_dispo' dispo.pk %}">
                   {% csrf_token %}
-                  <button class="btn btn-danger btn-sm" type="submit">Supprimer</button>
+                  <button class="btn btn-danger btn-sm" type="submit"><i class="fa-solid fa-trash" aria-hidden="true"></i>Supprimer</button>
                 </form>
               </div>
               {% if edit_dispo and edit_dispo.pk == dispo.pk %}
                 <div class="inline-edit-card">
-                  <h3>Modifier ce creneau</h3>
+                  <h3>Modifier ce créneau</h3>
                   <form method="post" action="{% url 'update_dispo' dispo.pk %}">
                     {% csrf_token %}
                     {% for field in edit_dispo_form %}
@@ -84,7 +90,7 @@
                       </div>
                     {% endfor %}
                     <div class="action-row">
-                      <button class="btn btn-primary" type="submit">Enregistrer</button>
+                      <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>Enregistrer</button>
                       <a class="btn btn-outline" href="{% url 'manage_dispos' %}">Annuler</a>
                     </div>
                   </form>
@@ -92,7 +98,7 @@
               {% endif %}
             </li>
           {% empty %}
-            <li>Aucune disponibilite enregistree.</li>
+            <li>Aucune disponibilité enregistrée.</li>
           {% endfor %}
         </ul>
       </div>
@@ -100,8 +106,8 @@
       <div class="card">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">Indisponibilites</p>
-            <h2>Dates bloquees</h2>
+            <p class="eyebrow">Indisponibilités</p>
+            <h2>Dates bloquées</h2>
           </div>
         </div>
         <ul class="list-clean">
@@ -109,18 +115,18 @@
             <li class="schedule-item">
               <div class="schedule-main">
                 <strong>{{ item.date|date:"d/m/Y" }}</strong>
-                <p class="text-muted">{{ item.motif|default:"Aucun motif renseigne." }}</p>
+                <p class="text-muted">{{ item.motif|default:"Aucun motif renseigné." }}</p>
               </div>
               <div class="schedule-actions">
-                <a class="btn btn-outline btn-sm" href="{% url 'manage_dispos' %}?edit_blocked_date={{ item.pk }}">Modifier</a>
+                <a class="btn btn-outline btn-sm" href="{% url 'manage_dispos' %}?edit_blocked_date={{ item.pk }}"><i class="fa-solid fa-pen" aria-hidden="true"></i>Modifier</a>
                 <form method="post" action="{% url 'delete_blocked_date' item.pk %}">
                   {% csrf_token %}
-                  <button class="btn btn-danger btn-sm" type="submit">Supprimer</button>
+                  <button class="btn btn-danger btn-sm" type="submit"><i class="fa-solid fa-trash" aria-hidden="true"></i>Supprimer</button>
                 </form>
               </div>
               {% if edit_blocked_date and edit_blocked_date.pk == item.pk %}
                 <div class="inline-edit-card">
-                  <h3>Modifier cette date</h3>
+                    <h3>Modifier cette date</h3>
                   <form method="post" action="{% url 'update_blocked_date' item.pk %}">
                     {% csrf_token %}
                     {% for field in edit_blocked_date_form %}
@@ -131,7 +137,7 @@
                       </div>
                     {% endfor %}
                     <div class="action-row">
-                      <button class="btn btn-primary" type="submit">Enregistrer</button>
+                      <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>Enregistrer</button>
                       <a class="btn btn-outline" href="{% url 'manage_dispos' %}">Annuler</a>
                     </div>
                   </form>
@@ -139,7 +145,7 @@
               {% endif %}
             </li>
           {% empty %}
-            <li>Aucune date bloquee.</li>
+            <li>Aucune date bloquée.</li>
           {% endfor %}
         </ul>
       </div>

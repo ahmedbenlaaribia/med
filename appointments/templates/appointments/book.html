@@ -6,12 +6,17 @@
 <section class="section">
   <div class="container">
     <div class="page-header">
-      <h1>Réserver un rendez-vous avec {{ medecin }}</h1>
-      <p class="text-muted">{{ medecin.specialite.nom }} - {{ medecin.ville }}</p>
+      <div>
+        <p class="eyebrow">Réservation</p>
+        <h1>Réserver un rendez-vous</h1>
+        <p class="text-muted">{{ medecin }} · {{ medecin.specialite.nom }} · {{ medecin.ville }}</p>
+      </div>
+      <a class="btn btn-outline" href="{% url 'doctor_detail' medecin.pk %}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Profil médecin</a>
     </div>
     <div class="split-layout">
       <div class="card">
-        <h2>Choisir un créneau</h2>
+        <p class="eyebrow">Créneau</p>
+        <h2>Choisir un horaire disponible</h2>
         <form method="post" style="margin-top: 1rem;">
           {% csrf_token %}
           {% if form.non_field_errors %}
@@ -37,11 +42,12 @@
             {{ form.motif }}
             {{ form.motif.errors }}
           </div>
-          <button class="btn btn-primary" type="submit">Confirmer la réservation</button>
+          <button class="btn btn-primary btn-block" type="submit"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i>Confirmer la réservation</button>
         </form>
       </div>
       <div class="card">
-        <h2>Aperçu des disponibilités</h2>
+        <p class="eyebrow">Disponibilités</p>
+        <h2>Aperçu des 14 prochains jours</h2>
         {% if grouped_slots %}
           <div class="slot-grid" style="margin-top: 1rem;">
             {% for slot_date, times in grouped_slots.items %}
@@ -56,7 +62,10 @@
             {% endfor %}
           </div>
         {% else %}
-          <p>Aucun créneau disponible pour les 14 prochains jours.</p>
+          <div class="empty-state">
+            <i class="fa-solid fa-calendar-xmark" aria-hidden="true"></i>
+            <p>Aucun créneau disponible pour les 14 prochains jours.</p>
+          </div>
         {% endif %}
       </div>
     </div>

@@ -6,8 +6,12 @@
 <section class="section">
   <div class="container">
     <div class="page-header">
-      <h1>Mes rendez-vous patients</h1>
-      <p class="text-muted">Consultez et mettez à jour le statut de vos consultations.</p>
+      <div>
+        <p class="eyebrow">Consultations</p>
+        <h1>Mes rendez-vous patients</h1>
+        <p class="text-muted">Consultez, recherchez et mettez à jour le statut de vos consultations.</p>
+      </div>
+      <a class="btn btn-outline" href="{% url 'doctor_dashboard' %}"><i class="fa-solid fa-table-columns" aria-hidden="true"></i>Dashboard</a>
     </div>
     <div class="card" style="margin-bottom: 1.5rem;">
       <form method="get" class="inline-form">
@@ -16,18 +20,30 @@
           <input class="form-control" id="date" type="date" name="date" value="{{ selected_date }}">
         </div>
         <div class="form-group" style="align-self: end;">
-          <button class="btn btn-primary" type="submit">Filtrer</button>
+          <button class="btn btn-primary" type="submit"><i class="fa-solid fa-filter" aria-hidden="true"></i>Filtrer</button>
         </div>
       </form>
     </div>
-    <div class="card table-wrapper">
-      <table class="table">
+    <div class="card">
+      <div class="table-toolbar">
+        <div>
+          <p class="eyebrow">Liste</p>
+          <h2>Consultations</h2>
+        </div>
+        <label class="table-search">
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+          <span class="sr-only">Rechercher</span>
+          <input class="form-control" type="search" placeholder="Rechercher dans le tableau" data-table-search="#doctor-appointments-table">
+        </label>
+      </div>
+      <div class="table-wrapper">
+      <table class="table" id="doctor-appointments-table" data-sortable>
         <thead>
           <tr>
-            <th>Patient</th>
-            <th>Date</th>
-            <th>Heure</th>
-            <th>Statut</th>
+            <th data-sort>Patient</th>
+            <th data-sort>Date</th>
+            <th data-sort>Heure</th>
+            <th data-sort>Statut</th>
             <th>Motif</th>
             <th>Actions</th>
           </tr>
@@ -45,20 +61,20 @@
                   <form method="post" action="{% url 'update_statut' rdv.pk %}">
                     {% csrf_token %}
                     <input type="hidden" name="statut" value="confirme">
-                    <button class="btn btn-secondary" type="submit">Confirmer</button>
+                    <button class="btn btn-secondary btn-sm" type="submit"><i class="fa-solid fa-check" aria-hidden="true"></i>Confirmer</button>
                   </form>
                   <form method="post" action="{% url 'update_statut' rdv.pk %}">
                     {% csrf_token %}
                     <input type="hidden" name="statut" value="termine">
-                    <button class="btn btn-outline" type="submit">Terminer</button>
+                    <button class="btn btn-outline btn-sm" type="submit"><i class="fa-solid fa-clipboard-check" aria-hidden="true"></i>Terminer</button>
                   </form>
                   <form method="post" action="{% url 'update_statut' rdv.pk %}">
                     {% csrf_token %}
                     <input type="hidden" name="statut" value="annule">
-                    <button class="btn btn-danger" type="submit">Annuler</button>
+                    <button class="btn btn-danger btn-sm" type="submit"><i class="fa-solid fa-xmark" aria-hidden="true"></i>Annuler</button>
                   </form>
                 {% else %}
-                  <span class="helper-text">Action deja effectuee</span>
+                  <span class="helper-text">Action déjà effectuée</span>
                 {% endif %}
               </td>
             </tr>
@@ -69,6 +85,7 @@
           {% endfor %}
         </tbody>
       </table>
+      </div>
     </div>
   </div>
 </section>

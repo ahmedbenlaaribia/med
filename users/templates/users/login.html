@@ -3,13 +3,22 @@
 {% block title %}Connexion | MedRDV{% endblock %}
 
 {% block content %}
-<section class="section">
-  <div class="container">
-    <div class="page-header">
-      <h1>Connexion</h1>
-      <p class="text-muted">Connectez-vous pour accéder à vos rendez-vous et à votre espace personnel.</p>
-    </div>
-    <div class="card" style="max-width: 520px; margin: 0 auto;">
+<section class="auth-layout">
+  <div class="auth-visual">
+    <p class="eyebrow">Espace sécurisé</p>
+    <h1>Retrouvez vos rendez-vous en un instant.</h1>
+    <p>Patients, médecins et administrateurs accèdent à un espace clair, pensé pour travailler vite et sereinement.</p>
+  </div>
+  <div class="auth-panel">
+    <div class="card auth-card">
+      <span class="auth-mark"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i></span>
+      <div class="page-header" style="margin-bottom: 1rem;">
+        <div>
+          <p class="eyebrow">Connexion</p>
+          <h1>Bon retour</h1>
+          <p class="text-muted">Connectez-vous pour accéder à vos rendez-vous et à votre espace personnel.</p>
+        </div>
+      </div>
       <form method="post">
         {% csrf_token %}
         {% if form.non_field_errors %}
@@ -25,8 +34,9 @@
           {{ form.password }}
           {{ form.password.errors }}
         </div>
-        <button class="btn btn-primary btn-block" type="submit">Se connecter</button>
+        <button class="btn btn-primary btn-block" type="submit"><i class="fa-solid fa-arrow-right-to-bracket" aria-hidden="true"></i>Se connecter</button>
       </form>
+      <p class="helper-text" style="margin-top: 1rem;">Nouveau patient ? <a href="{% url 'signup' %}">Créer un compte</a></p>
     </div>
   </div>
 </section>

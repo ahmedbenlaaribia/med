@@ -6,57 +6,72 @@
 <section class="section">
   <div class="container">
     <div class="page-header">
-      <h1>Planning du {{ medecin }}</h1>
-      <p class="text-muted">Vue d'ensemble de vos rendez-vous et de vos disponibilites.</p>
+      <div>
+        <p class="eyebrow">Espace médecin</p>
+        <h1>Planning du {{ medecin }}</h1>
+        <p class="text-muted">Vue d'ensemble de vos rendez-vous et de vos disponibilités.</p>
+      </div>
+      <div class="action-row">
+        <a class="btn btn-primary" href="{% url 'doctor_appointments' %}"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i>Tous mes RDV</a>
+        <a class="btn btn-outline" href="{% url 'manage_dispos' %}"><i class="fa-solid fa-clock" aria-hidden="true"></i>Créneaux</a>
+      </div>
     </div>
 
     <div class="dashboard-stats">
       <div class="stat-card"><i class="fa-solid fa-calendar-day"></i><div><strong>{{ weekly_summary.total }}</strong><span>RDV cette semaine</span></div></div>
-      <div class="stat-card"><i class="fa-solid fa-circle-check"></i><div><strong>{{ weekly_summary.confirmes }}</strong><span>Confirmes</span></div></div>
+      <div class="stat-card"><i class="fa-solid fa-circle-check"></i><div><strong>{{ weekly_summary.confirmes }}</strong><span>Confirmés</span></div></div>
       <div class="stat-card"><i class="fa-solid fa-hourglass-half"></i><div><strong>{{ weekly_summary.attente }}</strong><span>En attente</span></div></div>
-      <div class="stat-card"><i class="fa-solid fa-clipboard-check"></i><div><strong>{{ weekly_summary.termines }}</strong><span>Termines</span></div></div>
+      <div class="stat-card"><i class="fa-solid fa-clipboard-check"></i><div><strong>{{ weekly_summary.termines }}</strong><span>Terminés</span></div></div>
     </div>
 
-    <div class="action-row" style="margin: 1.5rem 0;">
-      <a class="btn btn-primary" href="{% url 'doctor_appointments' %}">Voir tous mes RDV</a>
-      <a class="btn btn-outline" href="{% url 'manage_dispos' %}">Gerer mes creneaux</a>
-    </div>
-
-    <div class="split-layout">
+    <div class="split-layout" style="margin-top: 1.5rem;">
       <div class="card">
-        <h2>Rendez-vous du jour</h2>
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Aujourd'hui</p>
+            <h2>Rendez-vous du jour</h2>
+          </div>
+        </div>
         <div style="margin-top: 1rem;">
           {% for rdv in today_appointments %}
             <div class="appointment-item">
-              <div>
-                <strong>{{ rdv.patient.get_full_name|default:rdv.patient.username }}</strong>
-                <p>{{ rdv.heure|time:"H:i" }} - {{ rdv.motif|default:"Consultation medicale" }}</p>
+              <div class="appointment-main">
+                <span class="doctor-mini-icon"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
+                <div>
+                  <strong>{{ rdv.patient.get_full_name|default:rdv.patient.username }}</strong>
+                  <p>{{ rdv.heure|time:"H:i" }} · {{ rdv.motif|default:"Consultation médicale" }}</p>
+                </div>
               </div>
               <span class="badge badge-{{ rdv.statut }}">{{ rdv.get_statut_display }}</span>
             </div>
           {% empty %}
-            <p>Aucun rendez-vous aujourd'hui.</p>
+            <div class="empty-state">
+              <i class="fa-solid fa-mug-hot" aria-hidden="true"></i>
+              <p>Aucun rendez-vous aujourd'hui.</p>
+            </div>
           {% endfor %}
         </div>
       </div>
       <div class="stack">
         <div class="card">
-          <h2>Mes disponibilites</h2>
+          <p class="eyebrow">Récurrence</p>
+          <h2>Mes disponibilités</h2>
           <ul class="list-clean" style="margin-top: 1rem;">
             {% for dispo in disponibilites %}
-              <li>{{ dispo.get_jour_display }} : {{ dispo.heure_debut|time:"H:i" }} - {{ dispo.heure_fin|time:"H:i" }}</li>
+              <li class="list-row"><span>{{ dispo.get_jour_display }}</span><strong>{{ dispo.heure_debut|time:"H:i" }} - {{ dispo.heure_fin|time:"H:i" }}</strong></li>
             {% empty %}
-              <li>Aucune disponibilite definie.</li>
+              <li>Aucune disponibilité définie.</li>
             {% endfor %}
           </ul>
         </div>
         <div class="card">
-          <h2>Dates bloquees</h2>
+          <p class="eyebrow">Indisponibilités</p>
+          <h2>Dates bloquées</h2>
           <ul class="list-clean" style="margin-top: 1rem;">
             {% for item in dates_bloquees %}
-              <li>{{ item.date|date:"d/m/Y" }}{% if item.motif %} - {{ item.motif }}{% endif %}</li>
+              <li class="list-row"><span>{{ item.date|date:"d/m/Y" }}</span><strong>{{ item.motif|default:"Sans motif" }}</strong></li>
             {% empty %}
-              <li>Aucune date bloquee.</li>
+              <li>Aucune date bloquée.</li>
             {% endfor %}
           </ul>
         </div>
